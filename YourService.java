@@ -5,7 +5,7 @@ import jp.jaxa.iss.kibo.rpc.api.KiboRpcService;
 import gov.nasa.arc.astrobee.Result;
 import gov.nasa.arc.astrobee.types.Point;
 import gov.nasa.arc.astrobee.types.Quaternion;
-
+import com.google.zxing.*; // for QR code reader
 /**
  * Class meant to handle commands from the Ground Data System and execute them in Astrobee
  */
@@ -17,16 +17,19 @@ public class YourService extends KiboRpcService {
         api.judgeSendStart();
 
         // move Astrobee from the starting point to P1-1
-        moveToWrapper(10.6, -4.3, 5, 0, 0, -0.7071068, 0.7071068);
-        moveToWrapper(11, -4.3, 5, 0, 0, -0.7071068, 0.7071068);
-        moveToWrapper(11, -5.7, 5, 0, 0, -0.7071068, 0.7071068);
         moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
-        moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+        // once Astrobee came to P1-1, get a camera image
+        Bitmap snapshot = api.getBitmapNavCam();
+        // read the QR code in the image and get the x-axis coordinate value of P3
+        String valueX = decodeQR(snapshot);
+        // send the result to scoring module
+        api.judgeSendDiscoveredQR(0, valueX);
 
         api.laserControl(true);
-        moveToWrapper(11.1, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+        moveToWrapper(11.5, -5.7, 4.5, 0, -0.7071068, 0, 0.7071068);
 
         api.judgeSendFinishSimulation();
+        sendData(MessageType.JSON, "data", "SUCCESS:defaultapk runPlan1");
     }
 
     @Override
@@ -56,6 +59,10 @@ public class YourService extends KiboRpcService {
             result = api.moveTo(point, quaternion, true);
             ++loopCounter;
         }
+    }
+
+    private String decodeQR(Bitmap image) { // for QR code reading
+        return new MultiFormatReader().decode(bitmap).getText();
     }
 
 }
