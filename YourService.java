@@ -4,10 +4,14 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.zxing.BinaryBitmap;
-import com.google.zxing.MultiFormatReader;
+import com.google.zxing.ChecksumException;
+import com.google.zxing.FormatException;
+import com.google.zxing.LuminanceSource;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 
 import gov.nasa.arc.astrobee.Result;
 import gov.nasa.arc.astrobee.android.gs.MessageType;
@@ -28,14 +32,56 @@ public class YourService extends KiboRpcService {
         // start this run
         api.judgeSendStart();
 
+        String TAG = "MyActivity";
+
+        String valueX = "";
+        String valueY = "";
+        String valueZ = "";
+        final int loop_qrRead = 2;
         // move Astrobee from the starting point to P1-1
         moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
-        // once Astrobee came to P1-1, get a camera image
-        Bitmap snapshot = api.getBitmapNavCam();
-        // read the QR code in the image and get the x-axis coordinate value of P3
-        String valueX = readQRImage(snapshot);
+        // once Astrobee came to P1-1, get a camera image and read QR
+        for (int i = 0; i < loop_qrRead; i++) {
+            if (!valueX.equals("")) {
+                break;
+            }
+            valueX = getQR();
+            moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
+        }
+
+        Log.i(TAG, "valueX = " + valueX);
         // send the result to scoring module
         api.judgeSendDiscoveredQR(0, valueX);
+
+        // move Astrobee from the starting point to P1-2
+        moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+        // once Astrobee came to P1-2, get a camera image and read QR
+        for (int i = 0; i < loop_qrRead; i++) {
+            if (!valueY.equals("")) {
+                break;
+            }
+            valueY = getQR();
+            moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+        }
+        Log.i(TAG, "valueY = " + valueY);
+
+        // send the result to scoring module
+        api.judgeSendDiscoveredQR(1, valueY);
+
+        // move Astrobee from the starting point to P1-2
+        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+        // once Astrobee came to P1-1, get a camera image and read QR
+        for (int i = 0; i < loop_qrRead; i++) {
+            if (!valueY.equals("")) {
+                break;
+            }
+            valueY = getQR();
+            moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+        }
+        Log.i(TAG, "valueZ = " + valueZ);
+
+        // send the result to scoring module
+        api.judgeSendDiscoveredQR(2, valueZ);
 
 //        api.laserControl(true);
 //        moveToWrapper(11.5, -5.7, 4.5, 0, -0.7071068, 0, 0.7071068);
@@ -73,21 +119,44 @@ public class YourService extends KiboRpcService {
         }
     }
 
-    public static String readQRImage(Bitmap bMap) {
+    private String getQR() {
+        String value = null;
+        int loopCounter = 0;
+        final int LOOP_MAX = 3; // 200 is actually too long
+        while (value == null && loopCounter < LOOP_MAX) {
+            Bitmap snapshot = api.getBitmapNavCam();
+            Log.i("Ok", "snapshot acquired");
+            value = readQRImage(snapshot);
+        }
+        if (value != null) {
+            return value;
+        } else {
+            return "";
+        }
+    }
+    private String readQRImage(Bitmap bMap) {
         int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
         bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
 
-        RGBLuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
+        LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
-        MultiFormatReader reader = new MultiFormatReader();// use this otherwise ChecksumException
-
+//        MultiFormatReader reader = new MultiFormatReader();// use this otherwise ChecksumException
+        Reader reader = new QRCodeReader();
         try {
-            String contents = reader.decode(bitmap).getText();
+//            String contents = reader.decode(bitmap, TRY_HARDER).getText();
+              String contents = reader.decode(bitmap).getText();
             return contents;
         } catch (NotFoundException e) {
-            Log.e(TAG, "decode exception", e);
+            Log.e(TAG, "not found exception", e);
+            return null;
+        } catch (ChecksumException e) {
+            Log.e(TAG, "checksum exception", e);
+            return null;
+        }
+        catch (FormatException e) {
+            Log.e(TAG, "format exception", e);
             return null;
         }
     }
