@@ -48,6 +48,7 @@ public class YourService extends KiboRpcService {
                 break;
             }
             moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
+
             Log.i(TAG, "moved to current P1-1");
             valueX = getQR();
         }
@@ -60,6 +61,7 @@ public class YourService extends KiboRpcService {
 
         // move Astrobee from the starting point to P1-2
         // once Astrobee came to P1-2, get a camera image and read QR
+
         String valueY = "";
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueY.equals("")) {
@@ -70,6 +72,7 @@ public class YourService extends KiboRpcService {
             valueY = getQR();
         }
         // move to P1-2 again to ensure it's in the same orientation for every simulation
+
 //        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "valueY = " + valueY);
 
@@ -79,6 +82,7 @@ public class YourService extends KiboRpcService {
 
         // move Astrobee from the starting point to P1-3
         // once Astrobee came to P1-3, get a camera image and read QR
+
         String valueZ = "";
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueZ.equals("")) {
@@ -86,6 +90,7 @@ public class YourService extends KiboRpcService {
             }
             moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-3");
+
             valueZ = getQR();
         }
         // move to P1-3 again to ensure it's in the same orientation for every simulation
@@ -159,6 +164,7 @@ public class YourService extends KiboRpcService {
         String value = null;
         int loopCounter = 0;
         final int LOOP_MAX = 20; // 200 is actually too long
+
         for (loopCounter = 0; loopCounter < LOOP_MAX; loopCounter++) {
             Bitmap snapshot = api.getBitmapNavCam();
             Log.i("Ok", "snapshot acquired");
