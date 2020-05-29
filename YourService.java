@@ -39,8 +39,6 @@ public class YourService extends KiboRpcService {
         String TAG = "MyActivity";
 
         String valueX = "";
-        String valueY = "";
-        String valueZ = "";
         final int loop_qrRead = 2;
 
         // move Astrobee from the starting point to P1-1
@@ -50,18 +48,21 @@ public class YourService extends KiboRpcService {
                 break;
             }
             moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
-            Log.i(TAG, "moved closer to P1-1");
+
+            Log.i(TAG, "moved to current P1-1");
             valueX = getQR();
         }
         // move to P1-1 again to ensure it's in the same orientation for every simulation
-        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
-        Log.i(TAG, "valueX = " + valueX);
+//        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+//        Log.i(TAG, "valueX = " + valueX);
         // send the result to scoring module
         api.judgeSendDiscoveredQR(0, valueX);
 
 
         // move Astrobee from the starting point to P1-2
         // once Astrobee came to P1-2, get a camera image and read QR
+
+        String valueY = "";
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueY.equals("")) {
                 break;
@@ -71,7 +72,8 @@ public class YourService extends KiboRpcService {
             valueY = getQR();
         }
         // move to P1-2 again to ensure it's in the same orientation for every simulation
-        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+
+//        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "valueY = " + valueY);
 
         // send the result to scoring module
@@ -80,16 +82,19 @@ public class YourService extends KiboRpcService {
 
         // move Astrobee from the starting point to P1-3
         // once Astrobee came to P1-3, get a camera image and read QR
+
+        String valueZ = "";
         for (int i = 0; i < loop_qrRead; i++) {
-            if (!valueY.equals("")) {
+            if (!valueZ.equals("")) {
                 break;
             }
             moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-3");
-            valueY = getQR();
+
+            valueZ = getQR();
         }
         // move to P1-3 again to ensure it's in the same orientation for every simulation
-        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+//        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
 
         Log.i(TAG, "valueZ = " + valueZ);
         // send the result to scoring module
@@ -159,7 +164,8 @@ public class YourService extends KiboRpcService {
         String value = null;
         int loopCounter = 0;
         final int LOOP_MAX = 20; // 200 is actually too long
-        while (loopCounter < LOOP_MAX) {
+
+        for (loopCounter = 0; loopCounter < LOOP_MAX; loopCounter++) {
             Bitmap snapshot = api.getBitmapNavCam();
             Log.i("Ok", "snapshot acquired");
             value = readQRImage(snapshot);
@@ -170,7 +176,6 @@ public class YourService extends KiboRpcService {
                 rotateRelativeWrapper('x'); // rotate by 90 degrees about x
                 Log.i("Ok", "rotated 90 degrees about x");
             }
-            loopCounter++;
         }
         return "";
 
