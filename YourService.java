@@ -38,48 +38,61 @@ public class YourService extends KiboRpcService {
         String valueY = "";
         String valueZ = "";
         final int loop_qrRead = 2;
+
         // move Astrobee from the starting point to P1-1
         moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
         // once Astrobee came to P1-1, get a camera image and read QR
+
         for (int i = 0; i < loop_qrRead; i++) {
+            valueX = getQR();
             if (!valueX.equals("")) {
                 break;
             }
-            valueX = getQR();
-            moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
+//            moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
+            Point relativeCloser = new Point(0.05, 0, 0);
+            Quaternion relativeOrientation = new Quaternion(0,0,0,1);
+            api.relativeMoveTo(relativeCloser, relativeOrientation, true);
+            Log.i(TAG, "moved closer to P1-1");
         }
-
+        // move to P1-1 again to ensure it's in the same orientation for every simulation
+        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "valueX = " + valueX);
         // send the result to scoring module
         api.judgeSendDiscoveredQR(0, valueX);
 
+
         // move Astrobee from the starting point to P1-2
-        moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
         // once Astrobee came to P1-2, get a camera image and read QR
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueY.equals("")) {
                 break;
             }
-            valueY = getQR();
             moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+            Log.i(TAG, "moved to current P1-2");
+            valueY = getQR();
         }
+        // move to P1-2 again to ensure it's in the same orientation for every simulation
+        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "valueY = " + valueY);
 
         // send the result to scoring module
         api.judgeSendDiscoveredQR(1, valueY);
 
-        // move Astrobee from the starting point to P1-2
-        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
-        // once Astrobee came to P1-1, get a camera image and read QR
+
+        // move Astrobee from the starting point to P1-3
+        // once Astrobee came to P1-3, get a camera image and read QR
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueY.equals("")) {
                 break;
             }
-            valueY = getQR();
             moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+            Log.i(TAG, "moved to current P1-3");
+            valueY = getQR();
         }
-        Log.i(TAG, "valueZ = " + valueZ);
+        // move to P1-3 again to ensure it's in the same orientation for every simulation
+        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
 
+        Log.i(TAG, "valueZ = " + valueZ);
         // send the result to scoring module
         api.judgeSendDiscoveredQR(2, valueZ);
 
@@ -119,20 +132,48 @@ public class YourService extends KiboRpcService {
         }
     }
 
+    private void rotateRelativeWrapper(char axis){
+        // rotate by 90 degrees relative to current orientation, around a principal axis
+
+        final int LOOP_MAX = 3;
+        final Point point = new Point(0, 0, 0);
+        Quaternion quaternion;
+        if (axis == 'x') {
+            quaternion = new Quaternion((float) 0.7071068, (float) 0,
+                    (float) 0, (float) 0.7071068);
+        } else if (axis == 'y') {
+            quaternion = new Quaternion((float) 0, (float) 0.7071068,
+                    (float) 0, (float) 0.7071068);
+        } else {
+            quaternion = new Quaternion((float) 0, (float) 0,
+                    (float) 0.7071068, (float) 0.7071068);
+        }
+        Result result = api.relativeMoveTo(point, quaternion, true);
+
+        int loopCounter = 0;
+        while(!result.hasSucceeded() || loopCounter < LOOP_MAX){
+            result = api.relativeMoveTo(point, quaternion, true);
+            ++loopCounter;
+        }
+    }
     private String getQR() {
         String value = null;
         int loopCounter = 0;
-        final int LOOP_MAX = 3; // 200 is actually too long
-        while (value == null && loopCounter < LOOP_MAX) {
+        final int LOOP_MAX = 5; // 200 is actually too long
+        while (loopCounter < LOOP_MAX) {
             Bitmap snapshot = api.getBitmapNavCam();
             Log.i("Ok", "snapshot acquired");
             value = readQRImage(snapshot);
+            if (value != null) {
+                return value;
+            }
+            rotateRelativeWrapper('x'); // rotate by 90 degrees about x
+            Log.i("Ok", "rotated 90 degrees about x");
+            loopCounter++;
         }
-        if (value != null) {
-            return value;
-        } else {
-            return "";
-        }
+
+        return "";
+
     }
     private String readQRImage(Bitmap bMap) {
         int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
@@ -145,7 +186,7 @@ public class YourService extends KiboRpcService {
 //        MultiFormatReader reader = new MultiFormatReader();// use this otherwise ChecksumException
         Reader reader = new QRCodeReader();
         try {
-//            String contents = reader.decode(bitmap, TRY_HARDER).getText();
+//            String contents = reader.decode(bitmap).getText();
               String contents = reader.decode(bitmap).getText();
             return contents;
         } catch (NotFoundException e) {
