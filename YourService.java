@@ -40,6 +40,7 @@ public class YourService extends KiboRpcService {
 
         String valueX = "";
         final int loop_qrRead = 2;
+        int numTryForMove = 0;
 
         // move Astrobee from the starting point to P1-1
         // once Astrobee came to P1-1, get a camera image and read QR
@@ -47,8 +48,8 @@ public class YourService extends KiboRpcService {
             if (!valueX.equals("")) {
                 break;
             }
-            moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
-            Log.i(TAG, "moved to current P1-1");
+            numTryForMove = moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
+            Log.i(TAG, "moved to current P1-1 after numTry = " + numTryForMove); // numTry 3 means fail to move there
             valueX = getQR();
         }
         // move to P1-1 again to ensure it's in the same orientation for every simulation
@@ -57,43 +58,62 @@ public class YourService extends KiboRpcService {
         // send the result to scoring module
         api.judgeSendDiscoveredQR(0, valueX);
 
-
-        // move Astrobee from the starting point to P1-2
-        // once Astrobee came to P1-2, get a camera image and read QR
-        String valueY = "";
-        for (int i = 0; i < loop_qrRead; i++) {
-            if (!valueY.equals("")) {
-                break;
-            }
-            moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
-            Log.i(TAG, "moved to current P1-2");
-            valueY = getQR();
-        }
-        // move to P1-2 again to ensure it's in the same orientation for every simulation
-//        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
-        Log.i(TAG, "valueY = " + valueY);
-
-        // send the result to scoring module
-        api.judgeSendDiscoveredQR(1, valueY);
-
-
-        // move Astrobee from the starting point to P1-3
+        // move Astrobee to P1-3
         // once Astrobee came to P1-3, get a camera image and read QR
         String valueZ = "";
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueZ.equals("")) {
                 break;
             }
-            moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
-            Log.i(TAG, "moved to current P1-3");
+            numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+            Log.i(TAG, "moved to current P1-3 after numTry = " + numTryForMove);
             valueZ = getQR();
         }
         // move to P1-3 again to ensure it's in the same orientation for every simulation
 //        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
-
         Log.i(TAG, "valueZ = " + valueZ);
         // send the result to scoring module
         api.judgeSendDiscoveredQR(2, valueZ);
+
+        // move Astrobee to P1-2
+        // once Astrobee came to P1-2, get a camera image and read QR
+        String valueY = "";
+        for (int i = 0; i < loop_qrRead; i++) {
+            if (!valueY.equals("")) {
+                break;
+            }
+            numTryForMove = moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+            Log.i(TAG, "moved to current P1-2 after numTry = " + numTryForMove);
+            valueY = getQR();
+        }
+        // move to P1-2 again to ensure it's in the same orientation for every simulation
+//        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+        Log.i(TAG, "valueY = " + valueY);
+        // send the result to scoring module
+        api.judgeSendDiscoveredQR(1, valueY);
+
+        numTryForMove = moveToWrapper(10.5,-6.4,5,0,0,-0.5,0.866);
+        Log.i(TAG, "moved to Q1 after numTry = " + numTryForMove);
+
+        // move Astrobee to P2-2
+        // once Astrobee came to P2-2, get a camera image and read QR
+        moveToWrapper(11.5,-8,5,0, 0, 0, 1);
+        Log.i(TAG, "moved to P2-2 after numTry = " + numTryForMove);
+        String quaY = "";
+        for (int i = 0; i < loop_qrRead; i++) {
+            if (!quaY.equals("")) {
+                break;
+            }
+            moveToWrapper(11.5,-8,5,0, 0, 0, 1);
+            Log.i(TAG, "moved to current P2-2");
+            quaY = getQR();
+        }
+        // move to P2-2 again to ensure it's in the same orientation for every simulation
+//        moveToWrapper(11.5,-8,5,0, 0, 0, 1);
+        Log.i(TAG, "quaY = " + quaY);
+        // send the result to scoring module
+        api.judgeSendDiscoveredQR(4, quaY);
+
 
 //        api.laserControl(true);
 //        moveToWrapper(11.5, -5.7, 4.5, 0, -0.7071068, 0, 0.7071068);
@@ -113,7 +133,7 @@ public class YourService extends KiboRpcService {
         // write here your plan 3
     }
     // You can add your method
-    private void moveToWrapper(double pos_x, double pos_y, double pos_z,
+    private int moveToWrapper(double pos_x, double pos_y, double pos_z,
                                double qua_x, double qua_y, double qua_z,
                                double qua_w){
 
@@ -126,9 +146,11 @@ public class YourService extends KiboRpcService {
 
         int loopCounter = 0;
         while(!result.hasSucceeded() || loopCounter < LOOP_MAX){
+//            Log.i("MoveTo", "Try again for current point");
             result = api.moveTo(point, quaternion, true);
             ++loopCounter;
         }
+        return loopCounter;
     }
 
     private void rotateRelativeWrapper(char axis){
@@ -168,9 +190,10 @@ public class YourService extends KiboRpcService {
             }
             if ((loopCounter+1) % 5 == 0) {
                 rotateRelativeWrapper('x'); // rotate by 90 degrees about x
-                Log.i("Ok", "rotated 90 degrees about x");
+                Log.i("getQR", "rotated 90 degrees about x");
             }
         }
+        Log.i("getQR", "number of QR tries = " + loopCounter);
         return "";
     }
     private String readQRImage(Bitmap original) {
