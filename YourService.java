@@ -48,20 +48,18 @@ public class YourService extends KiboRpcService {
                 break;
             }
             moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
-
             Log.i(TAG, "moved to current P1-1");
             valueX = getQR();
         }
         // move to P1-1 again to ensure it's in the same orientation for every simulation
 //        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
-//        Log.i(TAG, "valueX = " + valueX);
+        Log.i(TAG, "valueX = " + valueX);
         // send the result to scoring module
         api.judgeSendDiscoveredQR(0, valueX);
 
 
         // move Astrobee from the starting point to P1-2
         // once Astrobee came to P1-2, get a camera image and read QR
-
         String valueY = "";
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueY.equals("")) {
@@ -72,7 +70,6 @@ public class YourService extends KiboRpcService {
             valueY = getQR();
         }
         // move to P1-2 again to ensure it's in the same orientation for every simulation
-
 //        moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "valueY = " + valueY);
 
@@ -82,7 +79,6 @@ public class YourService extends KiboRpcService {
 
         // move Astrobee from the starting point to P1-3
         // once Astrobee came to P1-3, get a camera image and read QR
-
         String valueZ = "";
         for (int i = 0; i < loop_qrRead; i++) {
             if (!valueZ.equals("")) {
@@ -90,7 +86,6 @@ public class YourService extends KiboRpcService {
             }
             moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-3");
-
             valueZ = getQR();
         }
         // move to P1-3 again to ensure it's in the same orientation for every simulation
@@ -105,7 +100,7 @@ public class YourService extends KiboRpcService {
 
         api.judgeSendFinishSimulation();
         sendData(MessageType.JSON, "data", "SUCCESS:defaultapk runPlan1");
-
+        api.shutdownFactory();
     }
 
     @Override
@@ -164,7 +159,6 @@ public class YourService extends KiboRpcService {
         String value = null;
         int loopCounter = 0;
         final int LOOP_MAX = 20; // 200 is actually too long
-
         for (loopCounter = 0; loopCounter < LOOP_MAX; loopCounter++) {
             Bitmap snapshot = api.getBitmapNavCam();
             Log.i("Ok", "snapshot acquired");
@@ -178,9 +172,9 @@ public class YourService extends KiboRpcService {
             }
         }
         return "";
-
     }
-    private String readQRImage(Bitmap bMap) {
+    private String readQRImage(Bitmap original) {
+        Bitmap bMap = crop(original);
         int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
         bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
@@ -193,8 +187,8 @@ public class YourService extends KiboRpcService {
         try {
             Map<DecodeHintType,Object> tmpHintsMap = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
             tmpHintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-//            String contents = reader.decode(bitmap).getText();
-              String contents = reader.decode(bitmap, tmpHintsMap).getText();
+            String contents = reader.decode(bitmap).getText();
+//              String contents = reader.decode(bitmap, tmpHintsMap).getText();
             return contents;
         } catch (NotFoundException e) {
             Log.e(TAG, "not found exception", e);
@@ -208,5 +202,12 @@ public class YourService extends KiboRpcService {
             return null;
         }
     }
+    private Bitmap crop(Bitmap source) {
+        // use to crop the big bitmap returned from NavCam
+        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576);
+        Log.i("Crop", "done cropping");
+        return croppedBitmap;
+    }
+
 }
 
