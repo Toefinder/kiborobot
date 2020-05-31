@@ -150,8 +150,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && quaX.equals(""); i++) {
             numTryForMove = moveToWrapper(10.30,-7.5,4.7,0,0,1,0);
             Log.i(TAG, "moved to current P2-1 after numTry = " + numTryForMove);
-            rotateRelativeWrapper('z'); // rotate by 90 degrees about z
-            Log.i("getQR", "rotated 90 degrees about z");
+            rotateRelativeWrapper('x'); // rotate by 90 degrees about z
+            Log.i("getQR", "rotated 90 degrees about x");
             quaX = getQR();
         }
         // move to P2-1 again to ensure it's in the same orientation for every simulation
