@@ -37,7 +37,7 @@
 05-31 14:50:06.682 E/ContentValues( 3562): com.google.zxing.NotFoundException
 05-31 14:50:06.682 I/getQR   ( 3562): number of QR tries = 3
 05-31 14:50:22.530 I/MyActivity( 3562): moved to current P2-1 after numTry = 3
-05-31 14:50:36.084 I/getQR   ( 3562): rotated 90 degrees about z
+05-31 14:50:36.084 I/getQR   ( 3562): rotated 90 degrees about z // BUG: should be rotating about x
 05-31 14:50:37.576 I/getQR   ( 3562): snapshot acquired
 05-31 14:50:41.491 I/getQR   ( 3562): number of QR tries = 0
 05-31 14:50:41.492 I/MyActivity( 3562): quaX = qua_x, 0.4351896935034833
