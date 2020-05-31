@@ -1,0 +1,39 @@
+05-31 13:21:02.953 I/MyActivity( 3045): moved to P1-3 after numTry = 3
+05-31 13:21:08.058 I/getQR   ( 3045): snapshot acquired
+05-31 13:22:16.913 I/getQR   ( 3045): number of QR tries = 0
+05-31 13:22:16.914 I/MyActivity( 3045): valueZ = pos_z, 5.55287910071
+05-31 13:23:02.832 I/MyActivity( 3045): moved to P1-1 after numTry = 3
+05-31 13:23:03.950 I/getQR   ( 3045): snapshot acquired
+05-31 13:23:41.981 E/ContentValues( 3045): not found exception
+05-31 13:23:41.981 E/ContentValues( 3045): com.google.zxing.NotFoundException
+05-31 13:23:42.912 I/getQR   ( 3045): snapshot acquired
+05-31 13:24:29.794 I/getQR   ( 3045): number of QR tries = 1
+05-31 13:24:29.795 I/MyActivity( 3045): valueX = pos_x, 10.4487861028
+05-31 13:25:29.332 I/MyActivity( 3045): moved to P1-2 after numTry = 3
+05-31 13:25:29.790 I/getQR   ( 3045): snapshot acquired
+05-31 13:25:32.842 I/getQR   ( 3045): number of QR tries = 0
+05-31 13:25:32.842 I/MyActivity( 3045): valueY = pos_y, -9.593564249
+05-31 13:26:24.193 I/MyActivity( 3045): moved to Q1 after numTry = 3
+05-31 13:27:04.212 I/MyActivity( 3045): moved to P2-2 after numTry = 3
+05-31 13:27:06.031 I/getQR   ( 3045): snapshot acquired
+05-31 13:27:08.231 E/ContentValues( 3045): not found exception
+05-31 13:27:08.231 E/ContentValues( 3045): com.google.zxing.NotFoundException
+05-31 13:27:09.342 I/getQR   ( 3045): snapshot acquired
+05-31 13:27:12.031 I/getQR   ( 3045): number of QR tries = 1
+05-31 13:27:12.031 I/MyActivity( 3045): quaY = qua_y, 0.5343907482955339
+05-31 13:28:10.457 I/MyActivity( 3045): moved to P2-3 after numTry = 3
+05-31 13:28:11.316 I/getQR   ( 3045): snapshot acquired
+05-31 13:28:13.685 I/getQR   ( 3045): number of QR tries = 0
+05-31 13:28:13.686 I/MyActivity( 3045): quaZ = qua_z, -0.3137691974872524
+05-31 13:29:10.829 I/MyActivity( 3045): moved to P2-1 after numTry = 3
+05-31 13:29:11.705 I/getQR   ( 3045): snapshot acquired
+05-31 13:29:14.228 E/ContentValues( 3045): not found exception
+05-31 13:29:14.228 E/ContentValues( 3045): com.google.zxing.NotFoundException
+05-31 13:29:14.894 I/getQR   ( 3045): snapshot acquired
+05-31 13:29:17.831 I/getQR   ( 3045): number of QR tries = 1
+05-31 13:29:17.832 I/MyActivity( 3045): quaX = qua_x, -0.4319449079531206
+05-31 13:29:18.684 I/MyActivity( 3045): quaW = 0.6552854456934895
+05-31 13:30:08.341 I/MyActivity( 3045): moved to Q4 after numTry = 3
+05-31 13:30:54.215 I/MyActivity( 3045): moved to P3 after numTry = 3
+05-31 13:30:56.795 I/MyActivity( 3045): laser on
+05-31 13:31:07.400 I/MyActivity( 3045): Finished testing
