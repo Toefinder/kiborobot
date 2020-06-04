@@ -1,4 +1,6 @@
 Image size: 1280x960
+
+Setting 1: 5_9
 width: (5-10)/15
 height: (3-12)/15
 
@@ -6,3 +8,12 @@ Crop:
 start: (425, 190)
 width: 430 px
 height: 576
+
+Setting 2: 4_7
+width: (6-10)/15
+height: (5-12)/15
+
+Crop: 
+start: (510, 320)
+width: 340 px
+height: 448

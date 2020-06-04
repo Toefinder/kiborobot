@@ -37,7 +37,7 @@ public class YourService extends KiboRpcService {
         api.judgeSendStart();
 
         String TAG = "MyActivity";
-
+        Log.i(TAG, "Start testing");
 
         final int loop_qrRead = 2;
         int numTryForMove = 0;
@@ -295,7 +295,8 @@ public class YourService extends KiboRpcService {
     }
     private Bitmap crop(Bitmap source) {
         // use to crop the big bitmap returned from NavCam
-        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576);
+//        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576); // setting 1
+        Bitmap croppedBitmap = Bitmap.createBitmap(source, 510, 320, 340, 448); // setting 2
 //        Log.i("Crop", "done cropping");
         return croppedBitmap;
     }
