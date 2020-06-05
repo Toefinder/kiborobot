@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
-import com.google.zxing.DecodeHintType;
 import com.google.zxing.FormatException;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.NotFoundException;
@@ -14,8 +13,10 @@ import com.google.zxing.Reader;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
-import java.util.EnumMap;
-import java.util.Map;
+import org.opencv.aruco.Aruco;
+import org.opencv.aruco.Dictionary;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 
 import gov.nasa.arc.astrobee.Result;
 import gov.nasa.arc.astrobee.android.gs.MessageType;
@@ -24,6 +25,7 @@ import gov.nasa.arc.astrobee.types.Quaternion;
 import jp.jaxa.iss.kibo.rpc.api.KiboRpcService;
 
 import static android.content.ContentValues.TAG;
+import static org.opencv.aruco.Aruco.DICT_5X5_250;
 
 /**
  * Class meant to handle commands from the Ground Data System and execute them in Astrobee
@@ -45,13 +47,13 @@ public class YourService extends KiboRpcService {
         // move Astrobee to P1-3
         numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "moved to P1-3 after numTry = " + numTryForMove);
+
         // once Astrobee came to P1-3, get a camera image and read QR
         String valueZ = getQR();
         for (int i = 0; i < loop_qrRead && valueZ.equals(""); i++) {
             numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-3 after numTry = " + numTryForMove);
 
-            
             valueZ = getQR();
         }
         // move to P1-3 again to ensure it's in the same orientation for every simulation
@@ -71,7 +73,6 @@ public class YourService extends KiboRpcService {
             numTryForMove = moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
             Log.i(TAG, "moved to current P1-1 after numTry = " + numTryForMove); // numTry 3 means fail to move there
 
-            
             valueX = getQR();
         }
         // move to P1-1 again to ensure it's in the same orientation for every simulation
@@ -90,7 +91,6 @@ public class YourService extends KiboRpcService {
             numTryForMove = moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-2 after numTry = " + numTryForMove);
 
-            
             valueY = getQR();
         }
         // move to P1-2 again to ensure it's in the same orientation for every simulation
@@ -113,7 +113,6 @@ public class YourService extends KiboRpcService {
             numTryForMove = moveToWrapper(11.5,-8,5,0, 0, 0, 1);
             Log.i(TAG, "moved to current P2-2 after numTry = " + numTryForMove);
 
-            
             quaY = getQR();
         }
         // move to P2-2 again to ensure it's in the same orientation for every simulation
@@ -132,7 +131,6 @@ public class YourService extends KiboRpcService {
             numTryForMove = moveToWrapper(11,-7.7,5.55,0,-0.7071068,0,0.7071068);
             Log.i(TAG, "moved to current P2-3 after numTry = " + numTryForMove);
 
-            
             quaZ = getQR();
         }
         // move to P2-3 again to ensure it's in the same orientation for every simulation
@@ -151,7 +149,6 @@ public class YourService extends KiboRpcService {
             numTryForMove = moveToWrapper(10.30,-7.5,4.7,0,0,1,0);
             Log.i(TAG, "moved to current P2-1 after numTry = " + numTryForMove);
 
-            
             quaX = getQR();
         }
         // move to P2-1 again to ensure it's in the same orientation for every simulation
@@ -173,6 +170,13 @@ public class YourService extends KiboRpcService {
         numTryForMove = moveToWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
         Log.i(TAG, "moved to P3 after numTry = " + numTryForMove);
 
+        numTryForMove = moveCloserWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
+        Log.i(TAG, "moved closer to AR tag after numTry = " + numTryForMove);
+
+        Log.i(TAG,"Getting AR ID ...");
+        String arId = getAR();
+        api.judgeSendDiscoveredAR(arId);
+        Log.i(TAG,"AR ID = " + arId);
 
         // attempt to turn on laser control
         api.laserControl(true);
@@ -189,11 +193,16 @@ public class YourService extends KiboRpcService {
     @Override
     protected void runPlan2(){
         // write here your plan 2
+        // start this run
+//
+
     }
 
     @Override
     protected void runPlan3(){
         // write here your plan 3
+        // start this run
+
     }
     // You can add your method
     private int moveToWrapper(double pos_x, double pos_y, double pos_z,
@@ -221,7 +230,7 @@ public class YourService extends KiboRpcService {
     }
 
 
-    private String getQR() {
+    private String getQR() { // using Zxing
         String value = null;
         int loopCounter = 0;
         final int LOOP_MAX = 3; // 200 is actually too long
@@ -241,6 +250,7 @@ public class YourService extends KiboRpcService {
         Log.i("getQR", "number of QR tries = " + loopCounter);
         return "";
     }
+
     private String readQRImage(Bitmap original) {
         Bitmap bMap = crop(original);
         int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
@@ -253,10 +263,10 @@ public class YourService extends KiboRpcService {
 //        MultiFormatReader reader = new MultiFormatReader();// use this otherwise ChecksumException
         Reader reader = new QRCodeReader();
         try {
-            Map<DecodeHintType,Object> tmpHintsMap = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
-            tmpHintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+//            Map<DecodeHintType,Object> tmpHintsMap = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
+//            tmpHintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
             String contents = reader.decode(bitmap).getText();
-//              String contents = reader.decode(bitmap, tmpHintsMap).getText();
+//              String contents = reader.decode(bitmap, tmpHintsMap).getText(); // for TRY_HARDER
             return contents;
         } catch (NotFoundException e) {
             Log.e(TAG, "not found exception", e);
@@ -274,8 +284,15 @@ public class YourService extends KiboRpcService {
         // use to crop the big bitmap returned from NavCam
 //        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576); // setting 1
         Bitmap croppedBitmap = Bitmap.createBitmap(source, 510, 320, 340, 448); // setting 2
+//        Bitmap croppedBitmap = Bitmap.createBitmap(source, 512, 352, 341, 396); // setting 3
 //        Log.i("Crop", "done cropping");
         return croppedBitmap;
+    }
+    private Mat cropMat(Mat source) {
+        // used to crop the big mat returned from NavCam
+
+        Rect rectCrop = new Rect(510, 320, 340, 448); // setting 2
+        return new Mat(source, rectCrop);
     }
     private double parseInfo(String source) {
         // source is the string read from QR code, we want to extract the coordinates/ orientations from there
@@ -285,5 +302,90 @@ public class YourService extends KiboRpcService {
 
         return Double.parseDouble(source.substring(7));
     }
+    private String ARdetect(Mat source) {
+        // detect AR id
+        Aruco ARaruco = new Aruco();
+        Dictionary dictionary = ARaruco.getPredefinedDictionary(DICT_5X5_250);
+        Mat markerIds = new Mat();
+        ARaruco.detectMarkers(source,dictionary, null,markerIds);
+        int id = (int)(markerIds.get(0, 0)[0]);
+        return String.valueOf(id);
+    }
+    private String getAR() {
+        // take a snapshot, get ARid
+        Mat snapshotMat = api.getMatNavCam();
+        Mat source = cropMat(snapshotMat);
+        String value = ARdetect(source);
+        int loopCounter = 0;
+        final int LOOP_MAX = 3;
+        while (loopCounter<= LOOP_MAX && value.equals("")) {
+            source = api.getMatNavCam();
+            value = ARdetect(source);
+            loopCounter++;
+        }
+        Log.i("getAR","get AR after numTry = " + loopCounter);
+        return value;
+    }
+
+    private int moveCloserWrapper(double pos_x, double pos_y, double pos_z,
+                              double qua_x, double qua_y, double qua_z,
+                              double qua_w){
+        // move the robot closer in the given orientation that it's facing
+        // api.moveTO will be used for a maximum of 3 times
+        // 0 or 1 or 2 will be returned if the robot succeeds after 1, 2 and 3 tries respectively
+        // 3 will be returned if the robot doesn't succeed after 3 tries
+
+        double direction_x = qua_x*qua_x + qua_w*qua_w - qua_z*qua_z - qua_y*qua_y;
+        double direction_y = 2*qua_x*qua_y + 2*qua_w*qua_z;
+        double direction_z = 2*qua_x*qua_z - 2*qua_w*qua_y;
+
+        double x_times;
+        double y_times;
+        double z_times;
+        double multiple; // the multiple of the direction vector, calculated as the min of x_times, y_times and z_times
+        if (direction_x > 0) {
+            x_times = (11.60 - pos_x) / direction_x; // 11.65 is the x_max of KIZ
+        } else {
+            x_times = (pos_x - 10.30) / direction_x; // 10.25 is the x_min of KIZ
+        }
+
+        if (direction_y > 0) {
+            y_times = (-2.95 - pos_y) / direction_y; // -3 is the y_max of KIZ
+        } else {
+            y_times = (pos_y - (-9.70)) / direction_y; // -9.75 is the y_min of KIZ
+        }
+
+        if (direction_z > 0) {
+            z_times = (5.55 - pos_z) / direction_z; // 5.6 is the z_max of KIZ
+        } else {
+            z_times = (pos_z - 4.25) / direction_z; // 4.2 is the z_min of KIZ
+        }
+
+        // multiple is the minimum of the three to  ensure the robot will be still in KIZ
+        multiple = Math.min((Math.min(x_times, y_times)),z_times);
+
+        double new_pos_x = pos_x + multiple * direction_x;
+        double new_pos_y = pos_y + multiple * direction_y;
+        double new_pos_z = pos_z + multiple * direction_z;
+
+        final int LOOP_MAX = 3; // actually this is the minimum
+        final int LOOP_LIMIT = 6;
+        Point point = new Point(new_pos_x, new_pos_y, new_pos_z);
+        Quaternion quaternion = new Quaternion((float)qua_x, (float)qua_y,
+                (float)qua_z, (float)qua_w);
+
+        Result result = api.moveTo(point, quaternion, true);
+
+        int loopCounter = 0;
+        while((!result.hasSucceeded()||(loopCounter < LOOP_MAX)) && loopCounter < LOOP_LIMIT){
+//          Log.i("MoveTo", "Try again for current point");
+            result = api.moveTo(point, quaternion, true);
+            ++loopCounter;
+        }
+        Log.i("MyActivity", "Move closer in direction (" + direction_x + "," + direction_y + "," +
+                direction_z+ ") with multiple = " + multiple);
+        return loopCounter;
+    }
+
 }
 
