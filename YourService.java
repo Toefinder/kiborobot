@@ -51,8 +51,9 @@ public class YourService extends KiboRpcService {
         // once Astrobee came to P1-3, get a camera image and read QR
         String valueZ = getQR();
         for (int i = 0; i < loop_qrRead && valueZ.equals(""); i++) {
-            numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+            numTryForMove = moveToWrapper(11, -5.5, 4.33, 0,0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-3 after numTry = " + numTryForMove);
+
 
             valueZ = getQR();
         }
@@ -62,6 +63,15 @@ public class YourService extends KiboRpcService {
         // send the result to scoring module
         api.judgeSendDiscoveredQR(2, valueZ);
         double valueZdouble = parseInfo(valueZ);
+
+
+        //// Testing moveCloserWrapper
+        numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 1, 0, 0);
+        Log.i(TAG, "rotated at P1-3 after numTry = " + numTryForMove);
+
+        numTryForMove = moveCloserWrapper(11, -5.5, 4.33, 0, 1, 0, 0);
+        Log.i(TAG, "move closer in the same orientation after numTry = " + numTryForMove);
+        //// End of testing
 
 
         // move Astrobee from the starting point to P1-1
@@ -343,22 +353,29 @@ public class YourService extends KiboRpcService {
         double y_times;
         double z_times;
         double multiple; // the multiple of the direction vector, calculated as the min of x_times, y_times and z_times
-        if (direction_x > 0) {
+        if (direction_x > 0.001) {
             x_times = (11.60 - pos_x) / direction_x; // 11.65 is the x_max of KIZ
+        } else if (direction_x < -0.001)
+        {
+            x_times = (10.30 - pos_x) / direction_x; // 10.25 is the x_min of KIZ
         } else {
-            x_times = (pos_x - 10.30) / direction_x; // 10.25 is the x_min of KIZ
+            x_times = 1000; // choose a very big value
         }
 
-        if (direction_y > 0) {
+        if (direction_y > 0.001) {
             y_times = (-2.95 - pos_y) / direction_y; // -3 is the y_max of KIZ
+        } else if (direction_y < -0.001){
+            y_times = ((-9.70) - pos_y) / direction_y; // -9.75 is the y_min of KIZ
         } else {
-            y_times = (pos_y - (-9.70)) / direction_y; // -9.75 is the y_min of KIZ
+            y_times = 1000; // choose a very big value
         }
 
-        if (direction_z > 0) {
+        if (direction_z > 0.001) {
             z_times = (5.55 - pos_z) / direction_z; // 5.6 is the z_max of KIZ
+        } else if (direction_z < -0.001){
+            z_times = (4.25 - pos_z) / direction_z; // 4.2 is the z_min of KIZ
         } else {
-            z_times = (pos_z - 4.25) / direction_z; // 4.2 is the z_min of KIZ
+            z_times = 1000; // choose a very big value
         }
 
         // multiple is the minimum of the three to  ensure the robot will be still in KIZ

@@ -1,0 +1,67 @@
+06-06 02:48:25.209 I/MyActivity( 2954): Start testing
+06-06 02:50:17.667 I/MyActivity( 2954): moved to P1-3 after numTry = 3
+06-06 02:50:20.615 I/getQR   ( 2954): snapshot acquired
+06-06 02:50:31.751 I/getQR   ( 2954): number of QR tries = 0
+06-06 02:50:31.751 I/MyActivity( 2954): valueZ = pos_z, 5.265016831
+06-06 02:50:57.272 I/MyActivity( 2954): rotated at P1-3 after numTry = 3
+06-06 02:51:11.424 I/MyActivity( 2954): Move closer in direction (-1.0,0.0,0.0) with multiple = -0.6999999999999993
+06-06 02:51:11.424 I/MyActivity( 2954): move closer in the same orientation after numTry = 6
+06-06 02:52:22.229 I/MyActivity( 2954): moved to P1-1 after numTry = 3
+06-06 02:52:22.692 I/getQR   ( 2954): snapshot acquired
+06-06 02:52:23.924 I/getQR   ( 2954): number of QR tries = 0
+06-06 02:52:23.924 I/MyActivity( 2954): valueX = pos_x, 11.1658274146
+06-06 02:54:08.293 I/MyActivity( 2954): moved to P1-2 after numTry = 3
+06-06 02:54:08.584 I/getQR   ( 2954): snapshot acquired
+06-06 02:54:09.603 I/getQR   ( 2954): number of QR tries = 0
+06-06 02:54:09.604 I/MyActivity( 2954): valueY = pos_y, -9.59426875588
+06-06 02:55:29.177 I/MyActivity( 2954): moved to Q1 after numTry = 3
+06-06 02:56:32.362 I/MyActivity( 2954): moved to P2-2 after numTry = 3
+06-06 02:56:32.464 I/getQR   ( 2954): snapshot acquired
+06-06 02:56:33.014 I/getQR   ( 2954): number of QR tries = 0
+06-06 02:56:33.014 I/MyActivity( 2954): quaY = qua_y, 0.2294321101836968
+06-06 02:58:02.444 I/MyActivity( 2954): moved to P2-3 after numTry = 6
+06-06 02:58:02.914 I/getQR   ( 2954): snapshot acquired
+06-06 02:58:03.395 E/ContentValues( 2954): not found exception
+06-06 02:58:03.395 E/ContentValues( 2954): com.google.zxing.NotFoundException
+06-06 02:58:03.604 I/getQR   ( 2954): snapshot acquired
+06-06 02:58:03.991 E/ContentValues( 2954): not found exception
+06-06 02:58:03.991 E/ContentValues( 2954): com.google.zxing.NotFoundException
+06-06 02:58:04.169 I/getQR   ( 2954): snapshot acquired
+06-06 02:58:04.958 E/ContentValues( 2954): not found exception
+06-06 02:58:04.958 E/ContentValues( 2954): com.google.zxing.NotFoundException
+06-06 02:58:04.959 I/getQR   ( 2954): number of QR tries = 3
+06-06 03:01:58.221 I/MyActivity( 3289): Start testing
+06-06 03:04:01.880 I/MyActivity( 3289): moved to P1-3 after numTry = 3
+06-06 03:04:03.897 I/getQR   ( 3289): snapshot acquired
+06-06 03:04:13.785 I/getQR   ( 3289): number of QR tries = 0
+06-06 03:04:13.785 I/MyActivity( 3289): valueZ = pos_z, 5.265016831
+06-06 03:04:39.922 I/MyActivity( 3289): rotated at P1-3 after numTry = 3
+06-06 03:04:49.251 I/MyActivity( 3289): Move closer in direction (-1.0,0.0,0.0) with multiple = -0.6999999999999993
+06-06 03:04:49.252 I/MyActivity( 3289): move closer in the same orientation after numTry = 6
+06-06 03:06:01.816 I/MyActivity( 3289): moved to P1-1 after numTry = 3
+06-06 03:06:02.197 I/getQR   ( 3289): snapshot acquired
+06-06 03:06:02.745 I/getQR   ( 3289): number of QR tries = 0
+06-06 03:06:02.745 I/MyActivity( 3289): valueX = pos_x, 11.1658274146
+06-06 03:07:48.605 I/MyActivity( 3289): moved to P1-2 after numTry = 3
+06-06 03:07:49.354 I/getQR   ( 3289): snapshot acquired
+06-06 03:07:50.491 I/getQR   ( 3289): number of QR tries = 0
+06-06 03:07:50.492 I/MyActivity( 3289): valueY = pos_y, -9.59426875588
+06-06 03:09:10.365 I/MyActivity( 3289): moved to Q1 after numTry = 3
+06-06 03:10:14.929 I/MyActivity( 3289): moved to P2-2 after numTry = 3
+06-06 03:10:15.831 I/getQR   ( 3289): snapshot acquired
+06-06 03:10:16.602 I/getQR   ( 3289): number of QR tries = 0
+06-06 03:10:16.739 I/MyActivity( 3289): quaY = qua_y, 0.2294321101836968
+06-06 03:11:52.441 I/MyActivity( 3289): moved to P2-3 after numTry = 3
+06-06 03:11:52.646 I/getQR   ( 3289): snapshot acquired
+06-06 03:11:53.081 I/getQR   ( 3289): number of QR tries = 0
+06-06 03:11:53.082 I/MyActivity( 3289): quaZ = qua_z, -0.48535746345535574
+06-06 03:13:21.787 I/MyActivity( 3289): moved to P2-1 after numTry = 3
+06-06 03:13:22.080 I/getQR   ( 3289): snapshot acquired
+06-06 03:13:22.287 I/getQR   ( 3289): number of QR tries = 0
+06-06 03:13:22.287 I/MyActivity( 3289): quaX = qua_x, -0.1386739505978825
+06-06 03:13:22.366 I/MyActivity( 3289): quaW = 0.832201042363211
+06-06 03:14:44.846 I/MyActivity( 3289): moved to Q4 after numTry = 3
+06-06 03:15:37.375 I/MyActivity( 3289): moved to P3 after numTry = 3
+06-06 03:15:47.904 I/MyActivity( 3289): Move closer in direction (0.423578078969678,-0.8714624882389861,-0.24725440867388399) with multiple = -4.105151598484762
+06-06 03:15:47.904 I/MyActivity( 3289): moved closer to AR tag after numTry = 6
+06-06 03:15:47.905 I/MyActivity( 3289): Getting AR ID ...
