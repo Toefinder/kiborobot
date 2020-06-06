@@ -1,0 +1,73 @@
+06-06 06:46:57.896 I/MyActivity( 3103): Start testing
+06-06 06:47:38.279 I/MyActivity( 3103): moved to P1-3 after numTry = 6
+06-06 06:47:43.907 I/getQR   ( 3103): snapshot acquired
+06-06 06:48:10.847 E/ContentValues( 3103): not found exception
+06-06 06:48:10.847 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:48:11.843 I/getQR   ( 3103): snapshot acquired
+06-06 06:48:34.792 E/ContentValues( 3103): not found exception
+06-06 06:48:34.792 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:48:35.880 I/getQR   ( 3103): snapshot acquired
+06-06 06:49:04.246 E/ContentValues( 3103): not found exception
+06-06 06:49:04.246 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:49:04.246 I/getQR   ( 3103): number of QR tries = 3
+06-06 06:49:26.644 I/MyActivity( 3103): moved to current P1-3 after numTry = 6
+06-06 06:49:28.379 I/getQR   ( 3103): snapshot acquired
+06-06 06:49:44.896 E/ContentValues( 3103): not found exception
+06-06 06:49:44.896 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:49:46.309 I/getQR   ( 3103): snapshot acquired
+06-06 06:50:08.304 E/ContentValues( 3103): not found exception
+06-06 06:50:08.304 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:50:09.134 I/getQR   ( 3103): snapshot acquired
+06-06 06:50:14.109 E/ContentValues( 3103): not found exception
+06-06 06:50:14.109 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:50:14.109 I/getQR   ( 3103): number of QR tries = 3
+06-06 06:50:32.868 I/MyActivity( 3103): moved to current P1-3 after numTry = 6
+06-06 06:50:34.171 I/getQR   ( 3103): snapshot acquired
+06-06 06:50:35.695 E/ContentValues( 3103): not found exception
+06-06 06:50:35.695 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:50:36.179 I/getQR   ( 3103): snapshot acquired
+06-06 06:50:37.312 E/ContentValues( 3103): not found exception
+06-06 06:50:37.312 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:50:37.638 I/getQR   ( 3103): snapshot acquired
+06-06 06:50:39.359 E/ContentValues( 3103): not found exception
+06-06 06:50:39.359 E/ContentValues( 3103): com.google.zxing.NotFoundException
+06-06 06:50:39.439 I/getQR   ( 3103): number of QR tries = 3
+06-06 06:50:39.474 I/MyActivity( 3103): valueZ = 
+06-06 07:04:45.473 I/MyActivity( 3729): Start testing
+06-06 07:06:54.005 I/MyActivity( 3729): moved to P1-3 after numTry = 3
+06-06 07:06:58.908 I/getQR   ( 3729): snapshot acquired
+06-06 07:07:18.475 E/ContentValues( 3729): not found exception
+06-06 07:07:18.475 E/ContentValues( 3729): com.google.zxing.NotFoundException
+06-06 07:07:19.212 I/getQR   ( 3729): snapshot acquired
+06-06 07:07:40.016 I/getQR   ( 3729): number of QR tries = 1
+06-06 07:07:40.016 I/MyActivity( 3729): valueZ = pos_z, 5.40737410068
+06-06 07:08:13.517 I/MyActivity( 3729): rotated at P1-3 after numTry = 3
+06-06 07:10:07.505 I/MyActivity( 3729): Move closer in direction (-1.0,0.0,0.0) with multiple = 0.6999999999999993
+06-06 07:10:07.505 I/MyActivity( 3729): move closer in the same orientation after numTry = 3
+06-06 07:11:28.756 I/MyActivity( 3729): moved to P1-1 after numTry = 3
+06-06 07:11:29.212 I/getQR   ( 3729): snapshot acquired
+06-06 07:11:31.030 I/getQR   ( 3729): number of QR tries = 0
+06-06 07:11:31.058 I/MyActivity( 3729): valueX = pos_x, 11.1242579846
+06-06 07:13:17.866 I/MyActivity( 3729): moved to P1-2 after numTry = 3
+06-06 07:13:18.057 I/getQR   ( 3729): snapshot acquired
+06-06 07:13:18.565 I/getQR   ( 3729): number of QR tries = 0
+06-06 07:13:18.565 I/MyActivity( 3729): valueY = pos_y, -9.59849763595
+06-06 07:14:39.084 I/MyActivity( 3729): moved to Q1 after numTry = 3
+06-06 07:15:46.001 I/MyActivity( 3729): moved to P2-2 after numTry = 3
+06-06 07:15:46.562 I/getQR   ( 3729): snapshot acquired
+06-06 07:15:47.888 I/getQR   ( 3729): number of QR tries = 0
+06-06 07:15:47.889 I/MyActivity( 3729): quaY = qua_y, -0.0035287906253115287
+06-06 07:17:26.414 I/MyActivity( 3729): moved to P2-3 after numTry = 3
+06-06 07:17:27.361 I/getQR   ( 3729): snapshot acquired
+06-06 07:17:28.099 I/getQR   ( 3729): number of QR tries = 0
+06-06 07:17:28.100 I/MyActivity( 3729): quaZ = qua_z, -0.5906298192125231
+06-06 07:18:57.696 I/MyActivity( 3729): moved to P2-1 after numTry = 3
+06-06 07:18:58.362 I/getQR   ( 3729): snapshot acquired
+06-06 07:18:59.072 I/getQR   ( 3729): number of QR tries = 0
+06-06 07:18:59.205 I/MyActivity( 3729): quaX = qua_x, 0.3470185644422753
+06-06 07:18:59.243 I/MyActivity( 3729): quaW = 0.7285067468638348
+06-06 07:20:20.372 I/MyActivity( 3729): moved to Q4 after numTry = 3
+06-06 07:21:26.378 I/MyActivity( 3729): moved to P3 after numTry = 3
+06-06 07:21:44.887 I/MyActivity( 3729): Move closer in direction (0.30228792858741,-0.863004728104606,-0.4047775284022421) with multiple = 0.1176150729474286
+06-06 07:21:44.887 I/MyActivity( 3729): moved closer to AR tag after numTry = 3
+06-06 07:21:44.888 I/MyActivity( 3729): Getting AR ID ...
