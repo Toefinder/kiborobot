@@ -18,6 +18,8 @@ import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 
+import java.util.ArrayList;
+
 import gov.nasa.arc.astrobee.Result;
 import gov.nasa.arc.astrobee.android.gs.MessageType;
 import gov.nasa.arc.astrobee.types.Point;
@@ -65,13 +67,13 @@ public class YourService extends KiboRpcService {
         double valueZdouble = parseInfo(valueZ);
 
 
-        //// Testing moveCloserWrapper
-        numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 1, 0, 0);
-        Log.i(TAG, "rotated at P1-3 after numTry = " + numTryForMove);
-
-        numTryForMove = moveCloserWrapper(11, -5.5, 4.33, 0, 1, 0, 0);
-        Log.i(TAG, "move closer in the same orientation after numTry = " + numTryForMove);
-        //// End of testing
+//        //// Testing moveCloserWrapper
+//        numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 1, 0, 0);
+//        Log.i(TAG, "rotated at P1-3 after numTry = " + numTryForMove);
+//
+//        numTryForMove = moveCloserWrapper(11, -5.5, 4.33, 0, 1, 0, 0);
+//        Log.i(TAG, "move closer in the same orientation after numTry = " + numTryForMove);
+//        //// End of testing
 
 
         // move Astrobee from the starting point to P1-1
@@ -182,6 +184,7 @@ public class YourService extends KiboRpcService {
 
         numTryForMove = moveCloserWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
         Log.i(TAG, "moved closer to AR tag after numTry = " + numTryForMove);
+
 
         Log.i(TAG,"Getting AR ID ...");
         String arId = getAR();
@@ -316,21 +319,36 @@ public class YourService extends KiboRpcService {
         // detect AR id
         Aruco ARaruco = new Aruco();
         Dictionary dictionary = ARaruco.getPredefinedDictionary(DICT_5X5_250);
+        ArrayList<Mat> corners = new ArrayList<Mat>();
         Mat markerIds = new Mat();
-        ARaruco.detectMarkers(source,dictionary, null,markerIds);
-        int id = (int)(markerIds.get(0, 0)[0]);
-        return String.valueOf(id);
+
+        ARaruco.detectMarkers(source,dictionary, corners,markerIds);
+
+        if (corners.size() > 0) {
+            int id = (int) (markerIds.get(0, 0)[0]);
+            return String.valueOf(id);
+        }
+        else {
+            return "";
+        }
+
     }
     private String getAR() {
         // take a snapshot, get ARid
-        Mat snapshotMat = api.getMatNavCam();
-        Mat source = cropMat(snapshotMat);
+
+        //// with crop
+//        Mat snapshotMat = api.getMatNavCam();
+//        Mat source = cropMat(snapshotMat);
+
+        //// without crop
+        Mat source = api.getMatNavCam(); // without crop
         String value = ARdetect(source);
         int loopCounter = 0;
         final int LOOP_MAX = 3;
         while (loopCounter<= LOOP_MAX && value.equals("")) {
             source = api.getMatNavCam();
             value = ARdetect(source);
+            Log.i("getAR","value when loopCounter = " + loopCounter + " is " + value);
             loopCounter++;
         }
         Log.i("getAR","get AR after numTry = " + loopCounter);
