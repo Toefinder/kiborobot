@@ -50,6 +50,11 @@ public class YourService extends KiboRpcService {
         numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
         Log.i(TAG, "moved to P1-3 after numTry = " + numTryForMove);
 
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
+            Log.i(TAG, "moved to P1-3 again after numTry = " + numTryForMove);
+        }
+
         // once Astrobee came to P1-3, get a camera image and read QR
         String valueZ = getQR();
         for (int i = 0; i < loop_qrRead && valueZ.equals(""); i++) {
@@ -79,6 +84,12 @@ public class YourService extends KiboRpcService {
         // move Astrobee from the starting point to P1-1
         numTryForMove = moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
         Log.i(TAG, "moved to P1-1 after numTry = " + numTryForMove); // numTry 3 means fail to move there
+
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
+            Log.i(TAG, "moved to P1-1 again after numTry = " + numTryForMove); // numTry 3 means fail to move there
+        }
+
         // once Astrobee came to P1-1, get a camera image and read QR
         String valueX = getQR();
         for (int i = 0; i < loop_qrRead && valueX.equals(""); i++) {
@@ -97,6 +108,11 @@ public class YourService extends KiboRpcService {
         // move Astrobee to P1-2
         numTryForMove = moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
         Log.i(TAG, "moved to P1-2 after numTry = " + numTryForMove);
+
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
+            Log.i(TAG, "moved to P1-2 again after numTry = " + numTryForMove);
+        }
         // once Astrobee came to P1-2, get a camera image and read QR
         String valueY = getQR();
         for (int i = 0; i < loop_qrRead && valueY.equals(""); i++) {
@@ -116,9 +132,18 @@ public class YourService extends KiboRpcService {
         numTryForMove = moveToWrapper(10.58,-6.45,5.37,0,0,-0.5,0.866);
         Log.i(TAG, "moved to Q1 after numTry = " + numTryForMove);
 
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(10.58,-6.45,5.37,0,0,-0.5,0.866);
+            Log.i(TAG, "moved to Q1 again after numTry = " + numTryForMove);
+        }
         // move Astrobee to P2-2
         numTryForMove = moveToWrapper(11.5,-8,5,0, 0, 0, 1);
         Log.i(TAG, "moved to P2-2 after numTry = " + numTryForMove);
+
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(11.5,-8,5,0, 0, 0, 1);
+            Log.i(TAG, "moved to P2-2 again after numTry = " + numTryForMove);
+        }
         // once Astrobee came to P2-2, get a camera image and read QR
         String quaY = getQR();
         for (int i = 0; i < loop_qrRead && quaY.equals(""); i++) {
@@ -137,6 +162,11 @@ public class YourService extends KiboRpcService {
         // move Astrobee to P2-3
         numTryForMove = moveToWrapper(11,-7.7,5.55,0,-0.7071068,0,0.7071068);
         Log.i(TAG, "moved to P2-3 after numTry = " + numTryForMove);
+
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(11,-7.7,5.55,0,-0.7071068,0,0.7071068);
+            Log.i(TAG, "moved to P2-3 again after numTry = " + numTryForMove);
+        }
         // once Astrobee came to P2-3, get a camera image and read QR
         String quaZ = getQR();
         for (int i = 0; i < loop_qrRead && quaZ.equals(""); i++) {
@@ -155,6 +185,11 @@ public class YourService extends KiboRpcService {
         // move Astrobee to P2-1
         numTryForMove = moveToWrapper(10.30,-7.5,4.7,0,0,1,0);
         Log.i(TAG, "moved to P2-1 after numTry = " + numTryForMove);
+
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(10.30,-7.5,4.7,0,0,1,0);
+            Log.i(TAG, "moved to P2-1 again after numTry = " + numTryForMove);
+        }
         // once Astrobee came to P2-1, get a camera image and read QR
         String quaX = getQR();
         for (int i = 0; i < loop_qrRead && quaX.equals(""); i++) {
@@ -178,27 +213,57 @@ public class YourService extends KiboRpcService {
         numTryForMove = moveToWrapper(10.95,-9.1, 4.9,0,0,-0.7071068,0.7071068);
         Log.i(TAG, "moved to Q4 after numTry = " + numTryForMove);
 
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(10.95,-9.1, 4.9,0,0,-0.7071068,0.7071068);
+            Log.i(TAG, "moved to Q4 again after numTry = " + numTryForMove);
+        }
         // Attempt to move to P3 assuming it's in bay 7
         numTryForMove = moveToWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
         Log.i(TAG, "moved to P3 after numTry = " + numTryForMove);
+
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveToWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
+            Log.i(TAG, "moved to P3 again after numTry = " + numTryForMove);
+        }
+        // Attempt to get AR at P3
+        Log.i(TAG,"Getting AR ID at P3");
+        String arId = getAR();
+        if (!arId.equals("")) { // if we can get from this point, just do it first
+            api.judgeSendDiscoveredAR(arId);
+            Log.i(TAG,"AR ID = " + arId);
+        }
 
 //        numTryForMove = moveCloserWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
 //        Log.i(TAG, "moved closer to AR tag after numTry = " + numTryForMove);
 
         // move to face the AR tag
+
         double[] values = moveFaceIDWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
         numTryForMove = (int) values[0]; // values[0] is the loop counter. values[1,2,3] are the coordinates
         Log.i(TAG, "moved to face AR tag after numTry = " + numTryForMove);
 
-        Log.i(TAG,"Getting AR ID ...");
-        String arId = getAR();
-        api.judgeSendDiscoveredAR(arId);
-        Log.i(TAG,"AR ID = " + arId);
+        if (numTryForMove >= 6) { // in case it hasn't been able to
+            values = moveFaceIDWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
+            numTryForMove = (int) values[0]; // values[0] is the loop counter. values[1,2,3] are the coordinates
+            Log.i(TAG, "moved to face AR tag again after numTry = " + numTryForMove);
+        }
+
+        if (arId.equals("")) { // if we couldn't get AR ID from P3
+            Log.i(TAG, "Getting AR ID at point facing AR tag");
+            arId = getAR();
+
+            api.judgeSendDiscoveredAR(arId);
+            Log.i(TAG, "AR ID = " + arId);
+        }
 
         // move from facing AR tag to face target point
         numTryForMove = moveFaceTargetWrapper(values[1], values[2], values[3]);
         Log.i(TAG, "moved to face target point after numTry = " + numTryForMove);
 
+        if (numTryForMove >=6) { // in case it hasn't been able to
+            numTryForMove = moveFaceTargetWrapper(values[1], values[2], values[3]);
+            Log.i(TAG, "moved to face target point again after numTry = " + numTryForMove);
+        }
         // attempt to turn on laser control
         api.laserControl(true);
         Log.i(TAG, "laser on");
@@ -473,6 +538,7 @@ public class YourService extends KiboRpcService {
         double new_pos_y = -9.65; // -9.75 is the y_min of KIZ
         double new_pos_z = pos_z + multiple * direction_z;
 
+
         final int LOOP_MAX = 3; // actually this is the minimum
         final int LOOP_LIMIT = 6;
         Point point = new Point(new_pos_x, new_pos_y, new_pos_z);
@@ -505,8 +571,20 @@ public class YourService extends KiboRpcService {
         // 6 will be returned if the robot doesn't succeed after 7 tries or if it succeeds on try 7
 
         double new_pos_x = pos_x + 0.2/(Math.sqrt(2)) - 0.0572; // 0.0572 is laser offset, 0.2 is hypotenuse distance from AR tag to target point
-        double new_pos_y = pos_y; // pos_y would be -9.65 since -9.75 is the y_min of KIZ
+        double new_pos_y = -9.60; // -9.75 is the y_min of KIZ
         double new_pos_z = pos_z + 0.2/(Math.sqrt(2)) + 0.1111; // 0.1111 is laser offset, 0.2 is hypotenuse distance from AR tag to target point
+
+        if (new_pos_z >= 5.59) {
+            new_pos_z = 5.55;
+        } else if (new_pos_z <= 4.21 ) {
+            new_pos_z = 4.25;
+        }
+
+        if (new_pos_x >= 11.64) {
+            new_pos_x = 11.60;
+        } else if (new_pos_x <= 10.26){
+            new_pos_x = 10.30;
+        }
 
         final int LOOP_MAX = 3; // actually this is the minimum
         final int LOOP_LIMIT = 6;
