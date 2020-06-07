@@ -364,7 +364,7 @@ public class YourService extends KiboRpcService {
 //        Log.i("getAR","get AR after numTry = " + loopCounter);
 //        return value;
 
-        String value = null;
+        String value = "";
         int loopCounter = 0;
         final int LOOP_MAX = 3; // 200 is actually too long
         for (loopCounter = 0; loopCounter < LOOP_MAX; loopCounter++) {
@@ -476,8 +476,8 @@ public class YourService extends KiboRpcService {
         final int LOOP_MAX = 3; // actually this is the minimum
         final int LOOP_LIMIT = 6;
         Point point = new Point(new_pos_x, new_pos_y, new_pos_z);
-        Quaternion quaternion = new Quaternion((float)(-0.5), (float)0.5,
-                (float)(-0.5), (float)0.5);
+        Quaternion quaternion = new Quaternion((float)(0), (float)0,
+                (float)(-0.7071068), (float)0.7071068);
 
         Result result = api.moveTo(point, quaternion, true);
 
@@ -504,15 +504,15 @@ public class YourService extends KiboRpcService {
         // 3 will be returned if the robot succeeds within 4 tries
         // 6 will be returned if the robot doesn't succeed after 7 tries or if it succeeds on try 7
 
-        double new_pos_x = pos_x + Math.sqrt(0.2) - 0.0572; // 0.0572 is laser offset, 0.2 is hypotenuse distance from AR tag to target point
+        double new_pos_x = pos_x + 0.2/(Math.sqrt(2)) - 0.0572; // 0.0572 is laser offset, 0.2 is hypotenuse distance from AR tag to target point
         double new_pos_y = pos_y; // pos_y would be -9.65 since -9.75 is the y_min of KIZ
-        double new_pos_z = pos_z + Math.sqrt(0.2) + 0.1111; // 0.1111 is laser offset, 0.2 is hypotenuse distance from AR tag to target point
+        double new_pos_z = pos_z + 0.2/(Math.sqrt(2)) + 0.1111; // 0.1111 is laser offset, 0.2 is hypotenuse distance from AR tag to target point
 
         final int LOOP_MAX = 3; // actually this is the minimum
         final int LOOP_LIMIT = 6;
         Point point = new Point(new_pos_x, new_pos_y, new_pos_z);
-        Quaternion quaternion = new Quaternion((float)(-0.5), (float)0.5,
-                (float)(-0.5), (float)0.5);
+        Quaternion quaternion = new Quaternion((float)(0), (float)0,
+                (float)(-0.7071068), (float)0.7071068);
 
         Result result = api.moveTo(point, quaternion, true);
 
