@@ -20,35 +20,35 @@ This is the main function that will direct the astrobee
 `pos_x`, `pos_y`, `pos_z`: the location coordinates
 `qua_x`, `qua_y`, `qua_z`, `qua_w`: the orientation quaternion
 Return an integer, which is the number of tries the robot has done to move. This number can be used to check if the move is successful.
-3) Functions to read QR codes
- a) `private String readQRImage(Bitmap original)`
+3) Functions to read QR codes  
+  a) `private String readQRImage(Bitmap original)`
  This function returns the information string from a Bitmap object, raising exceptions and returns **null** if fails to do so. 
- Inner workings utilise QRCodeReader from Zxing package.
- b) `private Bitmap crop(Bitmap source)`
- Crops a Bitmap image to a smaller piece for easier reading of QR code. 
- c) `private String getQR()`
+ Inner workings utilise QRCodeReader from Zxing package.   
+  b) `private Bitmap crop(Bitmap source)`
+ Crops a Bitmap image to a smaller piece for easier reading of QR code.  
+  c) `private String getQR()`
  This function calls `api.getBitmapNavCam()` to get **Bitmap** camera image from NavCam, calls `crop()` to crop that image, and then calls `readQRImage()` until a correct string is obtained. If it fails after a maximum number of tries, an empty string is returned to the main function.
-4) Functions to read AR codes
- a) `private Mat cropMat(Mat source)`
+4) Functions to read AR codes  
+  a) `private Mat cropMat(Mat source)`
  Crops a Mat image to a smaller piece for easier reading of AR tag. 
- **Currently this is not used, because we are still not sure where the AR tag would lie in the frame**
- b) `private String ARdetect(Mat source)`
- Similar to `readQRImage()`, but uses Aruco from opencv.aruco instead of Zxing. `DICT_5X5_250` is used as the dictionary to read the AR tag. Unlike `readQRImage()`, this function return **empty string** if fails to read the AR tag. 
- c) `getAR()`
+ **Currently this is not used, because we are still not sure where the AR tag would lie in the frame**  
+  b) `private String ARdetect(Mat source)`  
+  Similar to `readQRImage()`, but uses Aruco from opencv.aruco instead of Zxing. `DICT_5X5_250` is used as the dictionary to read the AR tag. Unlike `readQRImage()`, this function return **empty string** if fails to read the AR tag.   
+  c) `getAR()`
  Quite similar to `getQR()`. This function calls `api.getMatNavCam()` to get **Mat** camera image from NavCam, then calls `ARdetect()` until a non-empty string is obtained. If it fails after a maximum number of tries, an empty string is returned to the main function.
-5) Other move functions 
- a) `private int moveCloserWrapper(double pos_x, double pos_y, double pos_z,
+5) Other move functions    
+  a) `private int moveCloserWrapper(double pos_x, double pos_y, double pos_z,
                               double qua_x, double qua_y, double qua_z,
                               double qua_w)`
 This function moves "forward" in the direction it's facing, until it nearly reaches the boundaries of the KIZ. Note that this function does not factor the KOZ, so it can only be used in certain situations. 
-**Initially developed to move closer to the AR tag, but burrently this function is not used, since P3 is already close to the boundary of the KIZ**
- b) `private double[] moveFaceIDWrapper(double pos_x, double pos_y, double pos_z,
+**Initially developed to move closer to the AR tag, but burrently this function is not used, since P3 is already close to the boundary of the KIZ**  
+  b) `private double[] moveFaceIDWrapper(double pos_x, double pos_y, double pos_z,
                                   double qua_x, double qua_y, double qua_z,
                                   double qua_w)`
  Arguments into this function are the location and orientation of P3, obtained from the QR codes. Note that `qua_w` is calculated in the main function, with the assumption that it's positive. **Potentially buggy, but can easily fix**
  This function moves to face the AR tag, with the first assumption that the y-coordinate of the plane containing the AR tag and target point is -10.20 (it's like assuming bay 7 is as long as bay 6). The second assumption is that the robot will point exactly at AR tag at P3 with the given orientation from the QR codes (it's like assuming that if we move the robot in the direction it's facing at P3, it will bump into the AR tag). The function first calculates the direction vector using the orientation quaternion. Then using the second assumption, it calculates the x and z coordinates of the AR tag.
- Returns a double with four elements. First element is number of tries to move to the new location. The latter three elements are the (x,y,z) coordinates of the new location that the robot moves to. 
- c) `private int moveFaceTargetWrapper(double pos_x, double pos_y, double pos_z)`
+ Returns a double with four elements. First element is number of tries to move to the new location. The latter three elements are the (x,y,z) coordinates of the new location that the robot moves to.   
+  c) `private int moveFaceTargetWrapper(double pos_x, double pos_y, double pos_z)`
  Arguments into this function are the location coordinates of the point facing the AR tag. These coordinates are obtained from `moveFaceIDWrapper`. 
  The function moves the robot to face the target. 
  Return the number of tries to move there.
