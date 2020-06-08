@@ -16,7 +16,8 @@ This is the main function that will direct the astrobee
 2) Move to a certain location,  with a certain orientation  
 `private int moveToWrapper(double pos_x, double pos_y, double pos_z,
                                double qua_x, double qua_y, double qua_z,
-                               double qua_w)`
+                               double qua_w)`  
+                               
 `pos_x`, `pos_y`, `pos_z`: the location coordinates   
 `qua_x`, `qua_y`, `qua_z`, `qua_w`: the orientation quaternion  
 Return an integer, which is the number of tries the robot has done to move. This number can be used to check if the move is successful.
