@@ -37,7 +37,7 @@ Return an integer, which is the number of tries the robot has done to move. This
   Similar to `readQRImage()`, but uses Aruco from opencv.aruco instead of Zxing. `DICT_5X5_250` is used as the dictionary to read the AR tag. Unlike `readQRImage()`, this function return **empty string** if fails to read the AR tag.   
   c) `getAR()`  
   Quite similar to `getQR()`. This function calls `api.getMatNavCam()` to get **Mat** camera image from NavCam, then calls `ARdetect()` until a non-empty string is obtained. If it fails after a maximum number of tries, an empty string is returned to the main function.  
-  5) Other move functions    
+5) Other move functions    
   a) `private int moveCloserWrapper(double pos_x, double pos_y, double pos_z,
                               double qua_x, double qua_y, double qua_z,
                               double qua_w)`  
