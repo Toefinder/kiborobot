@@ -173,6 +173,9 @@ public class YourService extends KiboRpcService {
         numTryForMove = moveToWrapper(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
         Log.i(TAG, "moved to P3 after numTry = " + numTryForMove);
 
+        //get 2d geometry of AR tag
+
+        //get location of target
 
         // attempt to turn on laser control
         api.laserControl(true);
