@@ -50,8 +50,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && valueZ.equals(""); i++) {
             numTryForMove = moveToWrapper(11, -5.5, 4.33, 0, 0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-3 after numTry = " + numTryForMove);
-
-            
+            rotateRelativeWrapper('z'); // rotate by 90 degrees about z
+            Log.i("getQR", "rotated 90 degrees about z");
             valueZ = getQR();
         }
         // move to P1-3 again to ensure it's in the same orientation for every simulation
@@ -70,8 +70,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && valueX.equals(""); i++) {
             numTryForMove = moveToWrapper(11.5, -5.7, 4.5, 0, 0, 0, 1);
             Log.i(TAG, "moved to current P1-1 after numTry = " + numTryForMove); // numTry 3 means fail to move there
-
-            
+            rotateRelativeWrapper('x'); // rotate by 90 degrees about x
+            Log.i("getQR", "rotated 90 degrees about x");
             valueX = getQR();
         }
         // move to P1-1 again to ensure it's in the same orientation for every simulation
@@ -89,8 +89,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && valueY.equals(""); i++) {
             numTryForMove = moveToWrapper(11, -6, 5.55, 0, -0.7071068, 0, 0.7071068);
             Log.i(TAG, "moved to current P1-2 after numTry = " + numTryForMove);
-
-            
+            rotateRelativeWrapper('z'); // rotate by 90 degrees about z
+            Log.i("getQR", "rotated 90 degrees about z");
             valueY = getQR();
         }
         // move to P1-2 again to ensure it's in the same orientation for every simulation
@@ -112,8 +112,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && quaY.equals(""); i++) {
             numTryForMove = moveToWrapper(11.5,-8,5,0, 0, 0, 1);
             Log.i(TAG, "moved to current P2-2 after numTry = " + numTryForMove);
-
-            
+            rotateRelativeWrapper('x'); // rotate by 90 degrees about x
+            Log.i("getQR", "rotated 90 degrees about x");
             quaY = getQR();
         }
         // move to P2-2 again to ensure it's in the same orientation for every simulation
@@ -131,8 +131,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && quaZ.equals(""); i++) {
             numTryForMove = moveToWrapper(11,-7.7,5.55,0,-0.7071068,0,0.7071068);
             Log.i(TAG, "moved to current P2-3 after numTry = " + numTryForMove);
-
-            
+            rotateRelativeWrapper('z'); // rotate by 90 degrees about z
+            Log.i("getQR", "rotated 90 degrees about z");
             quaZ = getQR();
         }
         // move to P2-3 again to ensure it's in the same orientation for every simulation
@@ -150,8 +150,8 @@ public class YourService extends KiboRpcService {
         for (int i = 0; i < loop_qrRead && quaX.equals(""); i++) {
             numTryForMove = moveToWrapper(10.30,-7.5,4.7,0,0,1,0);
             Log.i(TAG, "moved to current P2-1 after numTry = " + numTryForMove);
-
-            
+            rotateRelativeWrapper('x'); // rotate by 90 degrees about z
+            Log.i("getQR", "rotated 90 degrees about x");
             quaX = getQR();
         }
         // move to P2-1 again to ensure it's in the same orientation for every simulation
@@ -223,7 +223,30 @@ public class YourService extends KiboRpcService {
         return loopCounter;
     }
 
+    private void rotateRelativeWrapper(char axis){
+        // rotate by 90 degrees relative to current orientation, around a principal axis
 
+        final int LOOP_MAX = 3;
+        final Point point = new Point(0, 0, 0);
+        Quaternion quaternion;
+        if (axis == 'x') {
+            quaternion = new Quaternion((float) 0.7071068, (float) 0,
+                    (float) 0, (float) 0.7071068);
+        } else if (axis == 'y') {
+            quaternion = new Quaternion((float) 0, (float) 0.7071068,
+                    (float) 0, (float) 0.7071068);
+        } else {
+            quaternion = new Quaternion((float) 0, (float) 0,
+                    (float) 0.7071068, (float) 0.7071068);
+        }
+        Result result = api.relativeMoveTo(point, quaternion, true);
+
+        int loopCounter = 0;
+        while(!result.hasSucceeded() && loopCounter < LOOP_MAX){
+            result = api.relativeMoveTo(point, quaternion, true);
+            ++loopCounter;
+        }
+    }
     private String getQR() {
         String value = null;
         int loopCounter = 0;
