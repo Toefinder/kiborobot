@@ -44,7 +44,7 @@ public class YourService extends KiboRpcService {
         String TAG = "MyActivity";
         Log.i(TAG, "Start testing");
 
-        final int loop_qrRead = 2;
+        final int loop_qrRead = 3;
         int numTryForMove = 0;
 
         // move Astrobee to P1-3
@@ -343,8 +343,9 @@ public class YourService extends KiboRpcService {
         final int LOOP_MAX = 3; // 200 is actually too long
         for (loopCounter = 0; loopCounter < LOOP_MAX; loopCounter++) {
             Bitmap snapshot = api.getBitmapNavCam();
+            Bitmap bMap = crop(snapshot);
             Log.i("getQR", "snapshot acquired");
-            value = readQRImage(snapshot);
+            value = readQRImage(bMap);
             if (value != null) {
                 Log.i("getQR", "number of QR tries = " + loopCounter);
                 return value;
@@ -354,12 +355,27 @@ public class YourService extends KiboRpcService {
 //                Log.i("getQR", "rotated 90 degrees about x");
 //            }
         }
+        if (value == null) {
+            for (loopCounter = 0; loopCounter < LOOP_MAX; loopCounter++) {
+                Bitmap snapshot = api.getBitmapNavCam();
+                Bitmap bMap = crop1(snapshot); // use crop setting 1
+                Log.i("getQR", "snapshot acquired");
+                value = readQRImage(bMap);
+                if (value != null) {
+                    Log.i("getQR", "number of QR tries = " + loopCounter);
+                    return value;
+                }
+//            if ((loopCounter) % 5 == 0) {
+//                rotateRelativeWrapper('x'); // rotate by 90 degrees about x
+//                Log.i("getQR", "rotated 90 degrees about x");
+//            }
+            }
+        }
         Log.i("getQR", "number of QR tries = " + loopCounter);
         return "";
     }
 
-    private String readQRImage(Bitmap original) {
-        Bitmap bMap = crop(original);
+    private String readQRImage(Bitmap bMap) {
         int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
         bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
@@ -391,6 +407,14 @@ public class YourService extends KiboRpcService {
         // use to crop the big bitmap returned from NavCam
 //        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576); // setting 1
         Bitmap croppedBitmap = Bitmap.createBitmap(source, 510, 320, 340, 448); // setting 2
+//        Bitmap croppedBitmap = Bitmap.createBitmap(source, 512, 352, 341, 396); // setting 3
+//        Log.i("Crop", "done cropping");
+        return croppedBitmap;
+    }
+    private Bitmap crop1(Bitmap source) {
+        // use to crop the big bitmap returned from NavCam
+        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576); // setting 1
+//        Bitmap croppedBitmap = Bitmap.createBitmap(source, 510, 320, 340, 448); // setting 2
 //        Bitmap croppedBitmap = Bitmap.createBitmap(source, 512, 352, 341, 396); // setting 3
 //        Log.i("Crop", "done cropping");
         return croppedBitmap;
