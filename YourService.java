@@ -1,3 +1,4 @@
+
 package jp.jaxa.iss.kibo.rpc.defaultapk;
 
 import android.graphics.Bitmap;
@@ -290,13 +291,18 @@ public class YourService extends KiboRpcService {
         // start this run
 
     }
+
     // You can add your method
     private int moveToWrapper(double pos_x, double pos_y, double pos_z,
-                               double qua_x, double qua_y, double qua_z,
-                               double qua_w){
+                              double qua_x, double qua_y, double qua_z,
+                              double qua_w){
         // api.moveTO will be used for a minimum of 4 times and maximum 7 times
         // 3 will be returned if the robot succeeds within 4 tries
         // 6 will be returned if the robot doesn't succeed or if it succeeds on 7th try
+
+        double true_x;
+        double true_y;
+        double true_z;
 
         final int LOOP_MAX = 3; // actually this is the minimum
         final int LOOP_LIMIT = 6;
@@ -312,6 +318,13 @@ public class YourService extends KiboRpcService {
             result = api.moveTo(point, quaternion, true);
             ++loopCounter;
         }
+        Log.i("Position", String.valueOf(point));
+
+        true_x = api.getTrustedRobotKinematics().getPosition().getX();
+        true_y = api.getTrustedRobotKinematics().getPosition().getY();
+        true_z = api.getTrustedRobotKinematics().getPosition().getZ();
+
+        Log.i("Position", "true_x: " + true_x + ", true_y: " + true_y + ", true_z: " + true_z);
         return loopCounter;
     }
 
@@ -336,6 +349,7 @@ public class YourService extends KiboRpcService {
         Log.i("getQR", "number of QR tries = " + loopCounter);
         return "";
     }
+
 
     private String readQRImage(Bitmap original) {
         Bitmap bMap = crop(original);
@@ -366,6 +380,8 @@ public class YourService extends KiboRpcService {
             return null;
         }
     }
+
+
     private Bitmap crop(Bitmap source) {
         // use to crop the big bitmap returned from NavCam
 //        Bitmap croppedBitmap = Bitmap.createBitmap(source, 425, 190, 430, 576); // setting 1
@@ -374,12 +390,16 @@ public class YourService extends KiboRpcService {
 //        Log.i("Crop", "done cropping");
         return croppedBitmap;
     }
+
+
     private Mat cropMat(Mat source) {
         // used to crop the big mat returned from NavCam
 
         Rect rectCrop = new Rect(510, 320, 340, 448); // setting 2
         return new Mat(source, rectCrop);
     }
+
+
     private double parseInfo(String source) {
         // source is the string read from QR code, we want to extract the coordinates/ orientations from there
         // source for coordinates is like "pos_y, -9.59056230087"
@@ -388,6 +408,8 @@ public class YourService extends KiboRpcService {
 
         return Double.parseDouble(source.substring(7));
     }
+
+
     private String ARdetect(Mat source) {
         // detect AR id
         Aruco ARaruco = new Aruco();
@@ -406,6 +428,8 @@ public class YourService extends KiboRpcService {
         }
 
     }
+
+
     private String getAR() {
         // take a snapshot, get ARid
 
@@ -451,9 +475,10 @@ public class YourService extends KiboRpcService {
         return value;
     }
 
+
     private int moveCloserWrapper(double pos_x, double pos_y, double pos_z,
-                              double qua_x, double qua_y, double qua_z,
-                              double qua_w){
+                                  double qua_x, double qua_y, double qua_z,
+                                  double qua_w){
         // move the robot closer in the given orientation that it's facing
         // api.moveTO will be used for a minimum of 4 times and maximum 7 times
         // 3 will be returned if the robot succeeds within 4 tries
@@ -517,9 +542,11 @@ public class YourService extends KiboRpcService {
                 direction_z+ ") with multiple = " + multiple);
         return loopCounter;
     }
+
+
     private double[] moveFaceIDWrapper(double pos_x, double pos_y, double pos_z,
-                                  double qua_x, double qua_y, double qua_z,
-                                  double qua_w){
+                                       double qua_x, double qua_y, double qua_z,
+                                       double qua_w){
         // move the robot to face the AR ID
         // api.moveTO will be used for a minimum of 4 times and maximum 7 times
         // 3 will be returned if the robot succeeds within 4 tries
@@ -564,6 +591,8 @@ public class YourService extends KiboRpcService {
         values[3] = new_pos_z;
         return values;
     }
+
+
     private int moveFaceTargetWrapper(double pos_x, double pos_y, double pos_z){
         // move the robot from facing the AR tag to a location such that the laser will face the target point
         // api.moveTO will be used for a minimum of 4 times and maximum 7 times
@@ -605,3 +634,42 @@ public class YourService extends KiboRpcService {
     }
 }
 
+/*
+    private void arucoRead() {
+        Bitmap image = api.getBitmapNavCam();
+
+        Mat mat1 = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
+
+        // Convert to byte array
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        mat1.put(0, 0, byteArray);
+
+        Dictionary dictionary = Aruco.getPredefinedDictionary(Aruco.DICT_5X5_250);
+        Mat ids = new Mat();
+
+        List<Mat> corners = new ArrayList<>();
+
+        Aruco.detectMarkers(mat1, dictionary, corners, ids);
+
+        if (corners.size() > 0) {
+
+            Mat rvecs = new Mat();
+            Mat tvecs = new Mat();
+
+            Aruco.estimatePoseSingleMarkers(corners, 100f, cameraMatrix, distortionMatrix, rvecs, tvecs);
+
+            double[] mvalr1 = rvecs.row(0).get(0, 0);
+            double[] mvalt1 = tvecs.row(0).get(0, 0);
+
+            String strl1 = String.format("%.1f", mvalt1[0]) + "," + String.format("%.1f", mvalt1[1]);
+
+            float x1 = (float) mvalt1[0];
+            float y1 = (float) mvalt1[1];
+            float z1 = (float) mvalt1[2];
+
+            Log.d(TAG, "Aruco: " + strl1 + ":" + x1 + "," + y1 + "," + z1);
+        }
+    }
+ */
