@@ -20,7 +20,6 @@ import org.opencv.core.Rect;
 
 import java.util.ArrayList;
 
-import gov.nasa.arc.astrobee.Kinematics;
 import gov.nasa.arc.astrobee.Result;
 import gov.nasa.arc.astrobee.android.gs.MessageType;
 import gov.nasa.arc.astrobee.types.Point;
@@ -253,37 +252,38 @@ public class YourService extends KiboRpcService {
             api.judgeSendDiscoveredAR(arId);
             Log.i(TAG, "AR ID = " + arId);
         }
-        double[] targetCoordinates = getTargetCoordinates(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
-        if ((10.25 <= targetCoordinates[0]) && (targetCoordinates[0]<= 11.65) && (4.2 <= targetCoordinates[2]) && (targetCoordinates[2] <= 5.6)) {
-            // move from facing AR tag to face target point
-            numTryForMove = moveFaceTargetWrapper(targetCoordinates[0], -9.60, targetCoordinates[2]);
-            Log.i(TAG, "moved to face target point perpendicularly after numTry = " + numTryForMove);
-
-            if (numTryForMove >=6) { // in case it hasn't been able to
-                numTryForMove = moveFaceTargetWrapper(targetCoordinates[0], -9.60, targetCoordinates[2]);
-                Log.i(TAG, "moved to face target point perpendicularly after numTry = " + numTryForMove);
-            }
-        } else {
-            Log.i(TAG, "Getting current Kinematics");
-            Kinematics kine = api.getTrustedRobotKinematics(5); // could potentially takes time
-            double currentX = kine.getPosition().getX();
-            double currentY = kine.getPosition().getY();
-            double currentZ = kine.getPosition().getZ();
-            Log.i(TAG, "Current coordinates = (" + currentX + "," + currentY + "," + currentZ + ")");
-            double[] orientationToFaceTarget = getRotationFaceTarget(currentX, currentY, currentZ, targetCoordinates[0], targetCoordinates[1], targetCoordinates[2]);
-            numTryForMove = moveToWrapper(currentX, currentY, currentZ, orientationToFaceTarget[0], orientationToFaceTarget[1], orientationToFaceTarget[2], orientationToFaceTarget[3]);
-            Log.i(TAG, "rotated at current point to face target after numTry = " + numTryForMove);
-
-            if (numTryForMove >= 6) {
-                numTryForMove = moveToWrapper(currentX, currentY, currentZ, orientationToFaceTarget[0], orientationToFaceTarget[1], orientationToFaceTarget[2], orientationToFaceTarget[3]);
-                Log.i(TAG, "rotated at current point to face target again after numTry = " + numTryForMove);
-
-                if (numTryForMove >=6) { // in case it hasn't been able to move here, might as well agaration
-                    numTryForMove = moveFaceTargetWrapper(targetCoordinates[0], -9.60, targetCoordinates[2]);
-                    Log.i(TAG, "moved to face target point perpendicularly after numTry = " + numTryForMove);
-                }
-            }
-        }
+//        double[] targetCoordinates = getTargetCoordinates(valueXdouble, valueYdouble, valueZdouble, quaXdouble, quaYdouble, quaZdouble, quaWdouble);
+//        Log.i(TAG, "Target coordinates = (" + targetCoordinates[0] + "," + targetCoordinates[1]+ "," + targetCoordinates[2]+ ")");
+//        if ((10.25 <= targetCoordinates[0]) && (targetCoordinates[0]<= 11.65) && (4.2 <= targetCoordinates[2]) && (targetCoordinates[2] <= 5.6)) {
+//            // move from facing AR tag to face target point
+//            numTryForMove = moveFaceTargetWrapper(targetCoordinates[0], -9.60, targetCoordinates[2]);
+//            Log.i(TAG, "moved to face target point perpendicularly after numTry = " + numTryForMove);
+//
+//            if (numTryForMove >=6) { // in case it hasn't been able to
+//                numTryForMove = moveFaceTargetWrapper(targetCoordinates[0], -9.60, targetCoordinates[2]);
+//                Log.i(TAG, "moved to face target point again perpendicularly after numTry = " + numTryForMove);
+//            }
+//        } else {
+//            Log.i(TAG, "Getting current Kinematics");
+//            Kinematics kine = api.getTrustedRobotKinematics(5); // could potentially takes time
+//            double currentX = kine.getPosition().getX();
+//            double currentY = kine.getPosition().getY();
+//            double currentZ = kine.getPosition().getZ();
+//            Log.i(TAG, "Current coordinates = (" + currentX + "," + currentY + "," + currentZ + ")");
+//            double[] orientationToFaceTarget = getRotationFaceTarget(currentX, currentY, currentZ, targetCoordinates[0], targetCoordinates[1], targetCoordinates[2]);
+//            numTryForMove = moveToWrapper(currentX, currentY, currentZ, orientationToFaceTarget[0], orientationToFaceTarget[1], orientationToFaceTarget[2], orientationToFaceTarget[3]);
+//            Log.i(TAG, "rotated at current point to face target after numTry = " + numTryForMove);
+//
+//            if (numTryForMove >= 6) {
+//                numTryForMove = moveToWrapper(currentX, currentY, currentZ, orientationToFaceTarget[0], orientationToFaceTarget[1], orientationToFaceTarget[2], orientationToFaceTarget[3]);
+//                Log.i(TAG, "rotated at current point to face target again after numTry = " + numTryForMove);
+//
+//                if (numTryForMove >=6) { // in case it hasn't been able to move here, might as well agaration
+//                    numTryForMove = moveFaceTargetWrapper(targetCoordinates[0], -9.60, targetCoordinates[2]);
+//                    Log.i(TAG, "moved to face target point again again perpendicularly after numTry = " + numTryForMove);
+//                }
+//            }
+//        }
 
         // attempt to turn on laser control
         api.laserControl(true);
@@ -492,7 +492,7 @@ public class YourService extends KiboRpcService {
 //            }
         }
         Log.i("getAR","value when loopCounter = " + loopCounter + " is " + value);
-        Log.i("getAR", "number of QR tries = " + loopCounter);
+        Log.i("getAR", "number of AR tries = " + loopCounter);
         return value;
     }
 
